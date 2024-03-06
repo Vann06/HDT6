@@ -16,16 +16,22 @@ public class Main {
 
         int eleccion = scanner.nextInt();
 
-        Mapa mapa = null;
+        Map mapa = null;
 
-        switch(eleccion){
+        switch(eleccion) {
             case 1:
                 MapaFactory<HashMap> factoryHash = new HashMapFactory();
-                //mapa = factoryHash.crearMapa();
+                mapa = factoryHash.crearMapa();
+
                 break;
             case 2:
                 MapaFactory<TreeMap> factoryTree = new TreeMapFactory();
-                //mapa = factoryTree.crearMapa();
+                mapa = factoryTree.crearMapa();
+                break;
+            case 3:
+                MapaFactory<LinkedHashMap> factoryLinked = new LinkedHashMapFactory();
+                mapa = factoryLinked.crearMapa();
+                break;
         }
 
     }
