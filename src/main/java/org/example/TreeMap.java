@@ -55,6 +55,11 @@ public class TreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
         return node == null ? null : node.value;
     }
 
+    @Override
+    public void remove(K key) {
+        //xd
+    }
+
     private Node get(Node node, K key) {
         while (node != null) {
             int cmp = key.compareTo(node.key);
@@ -67,11 +72,6 @@ public class TreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
             }
         }
         return null;
-    }
-
-    @Override
-    public void remove(K key) {
-        // Simplified version; this method should handle tree rebalancing in a real scenario
     }
 
     @Override

@@ -103,7 +103,7 @@ public class CartaManager {
                 .forEach(entry -> {
                     System.out.println("Tipo: " + entry.getKey());
                     entry.getValue().stream()
-                            .sorted() 
+                            .sorted()
                             .forEach(System.out::println);
                 });
 
