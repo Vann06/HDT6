@@ -3,9 +3,9 @@ package org.example;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.*;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class CartaManager {
     private MyMap<String, Carta> cartasDisponibles;
@@ -65,7 +65,6 @@ public class CartaManager {
             System.out.println("La colección está vacía.");
             return;
         }
-
         System.out.println("Colección del usuario:");
         for (String nombreCarta : coleccionUsuario.keySet()) {
             Carta carta = cartasDisponibles.get(nombreCarta);
@@ -78,6 +77,36 @@ public class CartaManager {
         }
     }
 
-    // Implementa los métodos para mostrar las cartas en la colección del usuario,
-    // así como cualquier otra funcionalidad requerida por tu asignación.
+    public void mostrarCartas(){
+        for(MyMap.Entry<String, Carta> entry: cartasDisponibles.entrySet()) {
+            System.out.println("Nombre: " + entry.getKey() + "---- Tipo: " + entry.getValue().getTipo());
+        }
+    }
+
+    public void mostarCartasTipo(){
+        List<Carta> cartasOrdenadas = cartasDisponibles.entrySet().stream().map(entry -> entry.getValue()).sorted(Comparator.comparing(Carta::getTipo).thenComparing(Carta::getNombre)).collect(Collectors.toList());
+        cartasOrdenadas.forEach(carta -> System.out.println("Nombre: " + carta.getNombre() + " ---- Tipo: " + carta.getTipo()));
+    }
+
+    public void mostrarColeccionTipo(){
+        Map<String, List<String>> cartasPorTipo = new HashMap<>();
+
+        coleccionUsuario.keySet().forEach(nombreCarta -> {
+            Carta carta = cartasDisponibles.get(nombreCarta);
+            if (carta != null) {
+                cartasPorTipo.putIfAbsent(carta.getTipo(), new ArrayList<>());
+                cartasPorTipo.get(carta.getTipo()).add(nombreCarta + " (Cantidad: " + coleccionUsuario.get(nombreCarta) + ")");
+            }
+        });
+        cartasPorTipo.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> {
+                    System.out.println("Tipo: " + entry.getKey());
+                    entry.getValue().stream()
+                            .sorted() 
+                            .forEach(System.out::println);
+                });
+
+    }
+
 }

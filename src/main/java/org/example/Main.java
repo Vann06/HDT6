@@ -25,8 +25,10 @@ public class Main {
             System.out.println("1. Agregar carta a la colección");
             System.out.println("2. Mostrar el tipo de una carta específica");
             System.out.println("3. Mostrar todas las cartas en la colección");
-            System.out.println("4. Mostrar todas las cartas disponibles ordenadas por tipo");
-            System.out.println("5. Salir");
+            System.out.println("4. Mostrar todas las casrtas en la colección por tipo");
+            System.out.println("5. Mostrar todas las cartas disponibles");
+            System.out.println("6. Mostrar todas las cartas disponibles por tipo");
+            System.out.println("7. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Limpiar buffer del scanner
@@ -44,6 +46,15 @@ public class Main {
                     break;
                 case 3:
                     manager.mostrarColeccion();
+                    break;
+                case 4:
+                    manager.mostrarColeccionTipo();
+                    break;
+                case 5:
+                    manager.mostrarCartas();
+                    break;
+                case 6:
+                    manager.mostarCartasTipo();
                     break;
                 default:
                     System.out.println("Opción no válida.");
