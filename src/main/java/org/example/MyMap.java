@@ -1,6 +1,5 @@
 package org.example;
 
-import java.util.Map;
 import java.util.Set;
 
 public interface MyMap<K, V> {
@@ -10,9 +9,11 @@ public interface MyMap<K, V> {
     boolean containsKey(K key);
     int size();
     boolean isEmpty();
-    default V getOrDefault(K key, V defaultValue) {
-        V value = get(key);
-        return value != null ? value : defaultValue;
+    Set<K> keySet();
+    Set<Entry<K, V>> entrySet(); // Asegúrate de que este método esté definido correctamente.
+
+    interface Entry<K, V> {
+        K getKey();
+        V getValue();
     }
-    Set<Map.Entry<K, V>> entrySet();
 }

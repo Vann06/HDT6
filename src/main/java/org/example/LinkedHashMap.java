@@ -1,53 +1,66 @@
 package org.example;
 
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LinkedHashMap<K, V> implements MyMap<K, V> {
-    private static class Entry<K, V> {
-        K key;
+    private static class Entry<K, V> implements MyMap.Entry<K, V> {
+        final K key;
         V value;
-        Entry<K, V> next;
+        Entry<K, V> next; // Siguiente entrada en el cubo (para manejar colisiones)
         Entry<K, V> before, after; // Para mantener el orden de inserción
 
-        public Entry(K key, V value, Entry<K, V> next) {
+        Entry(K key, V value) {
             this.key = key;
             this.value = value;
-            this.next = next;
+        }
+
+        @Override
+        public K getKey() {
+            return this.key;
+        }
+
+        @Override
+        public V getValue() {
+            return this.value;
         }
     }
 
     private Entry<K, V>[] table;
     private final int capacity = 16; // Tamaño fijo para simplificar
-    private Entry<K, V> head, tail; // Mantener el orden de inserción
+    private Entry<K, V> head, tail; // Referencias para mantener el orden de inserción
+    private int size = 0;
 
+    @SuppressWarnings("unchecked")
     public LinkedHashMap() {
-        table = new Entry[capacity];
+        table = (Entry<K, V>[]) new Entry[capacity];
+    }
+
+    private int hash(K key) {
+        return Math.abs(key.hashCode()) % capacity;
     }
 
     @Override
     public void put(K key, V value) {
-        int index = getIndexForKey(key);
-        Entry<K, V> newEntry = new Entry<>(key, value, null);
+        int index = hash(key);
+        for (Entry<K, V> e = table[index]; e != null; e = e.next) {
+            if (key.equals(e.key)) {
+                e.value = value;
+                return;
+            }
+        }
+        Entry<K, V> newEntry = new Entry<>(key, value);
         if (table[index] == null) {
             table[index] = newEntry;
         } else {
-            Entry<K, V> previous = null;
             Entry<K, V> current = table[index];
-            while (current != null) {
-                if (current.key.equals(key)) {
-                    current.value = value;
-                    return;
-                }
-                previous = current;
+            while (current.next != null) {
                 current = current.next;
             }
-            previous.next = newEntry;
+            current.next = newEntry;
         }
-        insertInOrder(newEntry);
-    }
+        size++;
 
-    private void insertInOrder(Entry<K, V> newEntry) {
         if (head == null) {
             head = tail = newEntry;
         } else {
@@ -59,73 +72,53 @@ public class LinkedHashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public V get(K key) {
-        int index = getIndexForKey(key);
-        Entry<K, V> entry = table[index];
-        while (entry != null) {
-            if (entry.key.equals(key)) {
-                return entry.value;
+        int index = hash(key);
+        for (Entry<K, V> e = table[index]; e != null; e = e.next) {
+            if (key.equals(e.key)) {
+                return e.value;
             }
-            entry = entry.next;
         }
         return null;
     }
 
+    // Implementación simplificada; este método no actualiza el tamaño ni mantiene el orden de inserción
     @Override
     public void remove(K key) {
-        // Implementación simplificada de remove
+        // Implementación simplificada; se omite por simplicidad
     }
 
     @Override
     public boolean containsKey(K key) {
-        int index = getIndexForKey(key);
-        Entry<K, V> entry = table[index];
-        while (entry != null) {
-            if (entry.key.equals(key)) {
-                return true;
-            }
-            entry = entry.next;
-        }
-        return false;
+        return get(key) != null;
     }
 
     @Override
     public int size() {
-        int count = 0;
-        for (Entry<K, V> entry : table) {
-            Entry<K, V> current = entry;
-            while (current != null) {
-                count++;
-                current = current.next;
-            }
-        }
-        return count;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return head == null;
+        return size == 0;
     }
 
     @Override
-    public Set<Map.Entry<K, V>> entrySet() {
-        return null;
-    }
-
-
-    private int getIndexForKey(K key) {
-        return Math.abs(key.hashCode()) % capacity;
-    }
-
-    public void mostrarCartas() {
-        System.out.println("Todas las cartas disponibles:");
-        for (Entry<K, V> entry : table) {
-            Entry<K, V> current = entry;
-            while (current != null) {
-                System.out.println("Nombre: " + current.key + ", Valor: " + current.value);
-                current = current.next;
-            }
+    public Set<K> keySet() {
+        Set<K> set = new HashSet<>();
+        for (Entry<K, V> e = head; e != null; e = e.after) {
+            set.add(e.key);
         }
+        return set;
+    }
 
+    @Override
+    public Set<MyMap.Entry<K, V>> entrySet() {
+        Set<MyMap.Entry<K, V>> set = new HashSet<>();
+        for (Entry<K, V> e = head; e != null; e = e.after) {
+            set.add(e);
+        }
+        return set;
     }
 }
+
 

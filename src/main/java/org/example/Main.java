@@ -43,7 +43,7 @@ public class Main {
                     manager.mostrarTipoCarta(nombreCarta);
                     break;
                 case 3:
-                    manager.mostrarTodasCartas();
+                    manager.mostrarColeccion();
                     break;
                 default:
                     System.out.println("Opción no válida.");

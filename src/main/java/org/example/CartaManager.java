@@ -33,11 +33,22 @@ public class CartaManager {
     }
 
     public void agregarCartaAColeccion(String nombreCarta) {
+        // Primero, verifica si la carta existe en las cartas disponibles
         if (cartasDisponibles.containsKey(nombreCarta)) {
-            coleccionUsuario.put(nombreCarta, coleccionUsuario.getOrDefault(nombreCarta, 0) + 1);
-            System.out.println("Carta agregada a tu colección: " + nombreCarta);
+            // Si la carta está disponible, procede a agregarla o actualizar su cantidad en la colección del usuario
+            Integer cantidadActual = coleccionUsuario.get(nombreCarta);
+            if (cantidadActual == null) {
+                // Si la carta no está actualmente en la colección, agrégala con una cantidad de 1
+                coleccionUsuario.put(nombreCarta, 1);
+                System.out.println("Carta '" + nombreCarta + "' agregada a tu colección con una cantidad de 1.");
+            } else {
+                // Si la carta ya está en la colección, incrementa su cantidad
+                coleccionUsuario.put(nombreCarta, cantidadActual + 1);
+                System.out.println("Cantidad de '" + nombreCarta + "' incrementada a " + (cantidadActual + 1) + ".");
+            }
         } else {
-            System.out.println("La carta '" + nombreCarta + "' no existe en las cartas disponibles.");
+            // Si la carta no existe en las cartas disponibles, informa al usuario
+            System.out.println("La carta '" + nombreCarta + "' no existe en las cartas disponibles y no se puede agregar a la colección.");
         }
     }
 
@@ -49,18 +60,22 @@ public class CartaManager {
         }
     }
 
-    public void mostrarTodasCartas(){
-        System.out.println("Todas las cartas:");
-
-        int contador = 0;
-
-        // Itera sobre el mapa cartasDisponibles y muestra cada carta
-        for (Map.Entry<String, Carta> entry : cartasDisponibles.entrySet()) {
-            String nombreCarta = entry.getKey();
-            Carta carta = entry.getValue();
-            System.out.println("Nombre: " + nombreCarta + ", Tipo: " + carta.getTipo());
+    public void mostrarColeccion() {
+        if (coleccionUsuario.isEmpty()) {
+            System.out.println("La colección está vacía.");
+            return;
         }
 
+        System.out.println("Colección del usuario:");
+        for (String nombreCarta : coleccionUsuario.keySet()) {
+            Carta carta = cartasDisponibles.get(nombreCarta);
+            if (carta != null) {
+                int cantidad = coleccionUsuario.get(nombreCarta);
+                System.out.println("Nombre: " + carta.getNombre() + ", Tipo: " + carta.getTipo() + ", Cantidad: " + cantidad);
+            } else {
+                System.out.println("La carta con nombre '" + nombreCarta + "' no se encuentra en las cartas disponibles.");
+            }
+        }
     }
 
     // Implementa los métodos para mostrar las cartas en la colección del usuario,

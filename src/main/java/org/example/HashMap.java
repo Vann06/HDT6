@@ -2,48 +2,66 @@ package org.example;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 public class HashMap<K, V> implements MyMap<K, V> {
-    private class Entry {
+    private static class Entry<K, V> implements MyMap.Entry<K, V> {
         K key;
         V value;
+        Entry<K, V> next;
 
         Entry(K key, V value) {
             this.key = key;
             this.value = value;
+            this.next = null;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
         }
     }
 
-    private List<Entry>[] buckets;
-    private static final int SIZE = 16; // Tamaño simple para el ejemplo
+    private List<Entry<K, V>>[] table;
+    private int size;
+    private static final int DEFAULT_CAPACITY = 16;
 
+    @SuppressWarnings("unchecked")
     public HashMap() {
-        buckets = new LinkedList[SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            buckets[i] = new LinkedList<>();
+        table = (List<Entry<K, V>>[]) new LinkedList[DEFAULT_CAPACITY];
+        for (int i = 0; i < DEFAULT_CAPACITY; i++) {
+            table[i] = new LinkedList<>();
         }
+        size = 0;
+    }
+
+    private int hash(K key) {
+        return Math.abs(key.hashCode()) % DEFAULT_CAPACITY;
     }
 
     @Override
     public void put(K key, V value) {
-        int index = key.hashCode() % SIZE;
-        var bucket = buckets[index];
-        for (Entry entry : bucket) {
+        int index = hash(key);
+        for (Entry<K, V> entry : table[index]) {
             if (entry.key.equals(key)) {
                 entry.value = value;
                 return;
             }
         }
-        bucket.add(new Entry(key, value));
+        table[index].add(new Entry<>(key, value));
+        size++;
     }
 
     @Override
     public V get(K key) {
-        int index = key.hashCode() % SIZE;
-        var bucket = buckets[index];
-        for (Entry entry : bucket) {
+        int index = hash(key);
+        for (Entry<K, V> entry : table[index]) {
             if (entry.key.equals(key)) {
                 return entry.value;
             }
@@ -53,16 +71,26 @@ public class HashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public void remove(K key) {
-        int index = key.hashCode() % SIZE;
-        var bucket = buckets[index];
-        bucket.removeIf(entry -> entry.key.equals(key));
+        int index = hash(key);
+        Entry<K, V> prev = null;
+        for (Entry<K, V> entry : table[index]) {
+            if (entry.key.equals(key)) {
+                if (prev != null) {
+                    prev.next = entry.next;
+                } else {
+                    table[index].remove(entry);
+                }
+                size--;
+                return;
+            }
+            prev = entry;
+        }
     }
 
     @Override
     public boolean containsKey(K key) {
-        int index = key.hashCode() % SIZE;
-        var bucket = buckets[index];
-        for (Entry entry : bucket) {
+        int index = hash(key);
+        for (Entry<K, V> entry : table[index]) {
             if (entry.key.equals(key)) {
                 return true;
             }
@@ -72,27 +100,34 @@ public class HashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public int size() {
-        int size = 0;
-        for (List<Entry> bucket : buckets) {
-            size += bucket.size();
-        }
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-        for (List<Entry> bucket : buckets) {
-            if (!bucket.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+        return size == 0;
     }
 
     @Override
-    public Set<Map.Entry<K, V>> entrySet() {
-        return null;
+    public Set<K> keySet() {
+        Set<K> keys = new HashSet<>();
+        for (List<Entry<K, V>> bucket : table) {
+            for (Entry<K, V> entry : bucket) {
+                keys.add(entry.getKey());
+            }
+        }
+        return keys;
     }
 
-
+    @Override
+    public Set<MyMap.Entry<K, V>> entrySet() {
+        Set<MyMap.Entry<K, V>> entrySet = new HashSet<>();
+        for (List<Entry<K, V>> bucket : table) {
+            for (Entry<K, V> entry : bucket) {
+                entrySet.add(entry);
+            }
+        }
+        return entrySet;
+    }
 }
+
