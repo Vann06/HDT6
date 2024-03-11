@@ -1,4 +1,14 @@
 package org.example;
+/*
+Facultad de Ingenieria
+Departamento de Ciencias de la Computacion
+Algoritmos y Estructura de Datos
+
+Ricardo Godinez - 23247
+Vianka Castro - 23201
+
+LinkedHashMap
+ */
 
 import java.util.HashSet;
 import java.util.Set;

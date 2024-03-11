@@ -1,4 +1,14 @@
 package org.example;
+/*
+Facultad de Ingenieria
+Departamento de Ciencias de la Computacion
+Algoritmos y Estructura de Datos
+
+Ricardo Godinez - 23247
+Vianka Castro - 23201
+
+Clase cartaManager gestiona las operaciones relacionadas con las cartas de un juego.
+ */
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,12 +21,23 @@ public class CartaManager {
     private MyMap<String, Carta> cartasDisponibles;
     private MyMap<String, Integer> coleccionUsuario;
 
+    /**
+     * Constructor de la clase CartaManager.
+     * Carga las cartas disponibles desde un archivo y las inicializa en la colección del usuario.
+     *
+     * @param mapaDisponibles Mapa de las cartas disponibles.
+     */
     public CartaManager(MyMap<String, Carta> mapaDisponibles) {
         this.cartasDisponibles = mapaDisponibles;
         this.coleccionUsuario = new LinkedHashMap<>(); // O cualquier implementación preferida
         cargarCartas("cards_desc.txt");
     }
 
+    /**
+     * Carga las cartas disponibles desde un archivo de texto.
+     *
+     * @param archivo Nombre del archivo de texto que contiene las descripciones de las cartas.
+     */
     private void cargarCartas(String archivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
@@ -32,6 +53,12 @@ public class CartaManager {
         }
     }
 
+    /**
+     * Agrega una carta a la colección del usuario.
+     * Si la carta ya está en la colección, incrementa su cantidad.
+     *
+     * @param nombreCarta Nombre de la carta a agregar.
+     */
     public void agregarCartaAColeccion(String nombreCarta) {
         // Primero, verifica si la carta existe en las cartas disponibles
         if (cartasDisponibles.containsKey(nombreCarta)) {
@@ -52,6 +79,11 @@ public class CartaManager {
         }
     }
 
+    /**
+     * Muestra el tipo de una carta.
+     *
+     * @param nombreCarta Nombre de la carta cuyo tipo se desea mostrar.
+     */
     public void mostrarTipoCarta(String nombreCarta) {
         if (cartasDisponibles.containsKey(nombreCarta)) {
             System.out.println("Tipo de '" + nombreCarta + "': " + cartasDisponibles.get(nombreCarta).getTipo());
@@ -60,6 +92,10 @@ public class CartaManager {
         }
     }
 
+
+    /**
+     * Muestra la colección del usuario, incluyendo el nombre, tipo y cantidad de cada carta.
+     */
     public void mostrarColeccion() {
         if (coleccionUsuario.isEmpty()) {
             System.out.println("La colección está vacía.");
@@ -77,17 +113,27 @@ public class CartaManager {
         }
     }
 
+
+    /**
+     * Muestra todas las cartas disponibles.
+     */
     public void mostrarCartas(){
         for(MyMap.Entry<String, Carta> entry: cartasDisponibles.entrySet()) {
             System.out.println("Nombre: " + entry.getKey() + "---- Tipo: " + entry.getValue().getTipo());
         }
     }
 
+    /**
+     * Muestra las cartas ordenadas por tipo y luego por nombre.
+     */
     public void mostarCartasTipo(){
         List<Carta> cartasOrdenadas = cartasDisponibles.entrySet().stream().map(entry -> entry.getValue()).sorted(Comparator.comparing(Carta::getTipo).thenComparing(Carta::getNombre)).collect(Collectors.toList());
         cartasOrdenadas.forEach(carta -> System.out.println("Nombre: " + carta.getNombre() + " ---- Tipo: " + carta.getTipo()));
     }
 
+    /**
+     * Muestra la colección del usuario agrupada por tipo de carta.
+     */
     public void mostrarColeccionTipo(){
         Map<String, List<String>> cartasPorTipo = new HashMap<>();
 
