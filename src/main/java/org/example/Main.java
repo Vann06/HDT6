@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        Scanner lector = new Scanner(System.in);
 
         System.out.println("¿Qué tipo de mapa desea crear?");
         System.out.println("1. HashMap");
@@ -14,7 +14,7 @@ public class Main {
         System.out.println("3. LinkedHashMap");
         System.out.print("Ingrese el número de su elección: ");
 
-        int eleccion = scanner.nextInt();
+        int eleccion = lector.nextInt();
 
         Map mapa = null;
 
