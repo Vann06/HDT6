@@ -1,38 +1,51 @@
 package org.example;
+
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        CartaManager manager = null;
 
-        Scanner lector = new Scanner(System.in);
+        System.out.println("Bienvenido al gestor de cartas.");
 
-        System.out.println("¿Qué tipo de mapa desea crear?");
-        System.out.println("1. HashMap");
-        System.out.println("2. TreeMap");
-        System.out.println("3. LinkedHashMap");
-        System.out.print("Ingrese el número de su elección: ");
-
-        int eleccion = lector.nextInt();
-
-        Map mapa = null;
-
-        switch(eleccion) {
-            case 1:
-                MapaFactory<HashMap> factoryHash = new HashMapFactory();
-                mapa = factoryHash.crearMapa();
-
-                break;
-            case 2:
-                MapaFactory<TreeMap> factoryTree = new TreeMapFactory();
-                mapa = factoryTree.crearMapa();
-                break;
-            case 3:
-                MapaFactory<LinkedHashMap> factoryLinked = new LinkedHashMapFactory();
-                mapa = factoryLinked.crearMapa();
-                break;
+        // Selección del tipo de Mapa
+        System.out.println("Seleccione el tipo de Mapa (HashMap, TreeMap, LinkedHashMap):");
+        String tipoMapa = scanner.nextLine();
+        try {
+            manager = new CartaManager(new MapaFactory().crearMapa(tipoMapa));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return; // Termina el programa si el tipo de mapa no es válido
         }
 
+        boolean continuar = true;
+        while (continuar) {
+            System.out.println("\n¿Qué acción desea realizar?");
+            System.out.println("1. Agregar carta a la colección");
+            System.out.println("2. Mostrar el tipo de una carta específica");
+            System.out.println("3. Mostrar todas las cartas en la colección");
+            System.out.println("4. Mostrar todas las cartas disponibles ordenadas por tipo");
+            System.out.println("5. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer del scanner
+
+            switch (opcion) {
+                case 1:
+                    System.out.print("Ingrese el nombre de la carta que desea agregar: ");
+                    String nombreCarta = scanner.nextLine();
+                    manager.agregarCartaAColeccion(nombreCarta);
+                    break;
+                case 2:
+                    System.out.print("Ingrese el nombre de la carta para mostrar su tipo: ");
+                    nombreCarta = scanner.nextLine();
+                    manager.mostrarTipoCarta(nombreCarta);
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        }
+        System.out.println("Gracias por usar el gestor de cartas.");
     }
 }
