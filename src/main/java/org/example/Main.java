@@ -42,6 +42,9 @@ public class Main {
                     nombreCarta = scanner.nextLine();
                     manager.mostrarTipoCarta(nombreCarta);
                     break;
+                case 3:
+                    manager.mostrarTodasCartas();
+                    break;
                 default:
                     System.out.println("Opción no válida.");
             }

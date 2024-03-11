@@ -1,5 +1,8 @@
 package org.example;
 
+import java.util.Map;
+import java.util.Set;
+
 public class LinkedHashMap<K, V> implements MyMap<K, V> {
     private static class Entry<K, V> {
         K key;
@@ -87,8 +90,15 @@ public class LinkedHashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public int size() {
-        // Implementación simplificada de size
-        return 0; // Modificar según tu lógica
+        int count = 0;
+        for (Entry<K, V> entry : table) {
+            Entry<K, V> current = entry;
+            while (current != null) {
+                count++;
+                current = current.next;
+            }
+        }
+        return count;
     }
 
     @Override
@@ -96,8 +106,26 @@ public class LinkedHashMap<K, V> implements MyMap<K, V> {
         return head == null;
     }
 
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return null;
+    }
+
+
     private int getIndexForKey(K key) {
         return Math.abs(key.hashCode()) % capacity;
+    }
+
+    public void mostrarCartas() {
+        System.out.println("Todas las cartas disponibles:");
+        for (Entry<K, V> entry : table) {
+            Entry<K, V> current = entry;
+            while (current != null) {
+                System.out.println("Nombre: " + current.key + ", Valor: " + current.value);
+                current = current.next;
+            }
+        }
+
     }
 }
 

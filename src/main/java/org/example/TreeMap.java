@@ -1,5 +1,9 @@
 package org.example;
 
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.Set;
+
 public class TreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
     private class Node {
         K key;
@@ -111,4 +115,10 @@ public class TreeMap<K extends Comparable<K>, V> implements MyMap<K, V> {
     public boolean isEmpty() {
         return root == null;
     }
+
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return null;
+    }
+
 }

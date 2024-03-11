@@ -1,5 +1,8 @@
 package org.example;
 
+import java.util.Map;
+import java.util.Set;
+
 public interface MyMap<K, V> {
     void put(K key, V value);
     V get(K key);
@@ -11,4 +14,5 @@ public interface MyMap<K, V> {
         V value = get(key);
         return value != null ? value : defaultValue;
     }
+    Set<Map.Entry<K, V>> entrySet();
 }

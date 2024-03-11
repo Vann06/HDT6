@@ -3,6 +3,8 @@ package org.example;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class CartaManager {
@@ -12,7 +14,7 @@ public class CartaManager {
     public CartaManager(MyMap<String, Carta> mapaDisponibles) {
         this.cartasDisponibles = mapaDisponibles;
         this.coleccionUsuario = new LinkedHashMap<>(); // O cualquier implementación preferida
-        cargarCartas("C:\Users\richi\OneDrive\Documentos\GitHub\HDT6\cards_desc.txt");
+        cargarCartas("cards_desc.txt");
     }
 
     private void cargarCartas(String archivo) {
@@ -45,6 +47,20 @@ public class CartaManager {
         } else {
             System.out.println("La carta '" + nombreCarta + "' no existe en las cartas disponibles.");
         }
+    }
+
+    public void mostrarTodasCartas(){
+        System.out.println("Todas las cartas:");
+
+        int contador = 0;
+
+        // Itera sobre el mapa cartasDisponibles y muestra cada carta
+        for (Map.Entry<String, Carta> entry : cartasDisponibles.entrySet()) {
+            String nombreCarta = entry.getKey();
+            Carta carta = entry.getValue();
+            System.out.println("Nombre: " + nombreCarta + ", Tipo: " + carta.getTipo());
+        }
+
     }
 
     // Implementa los métodos para mostrar las cartas en la colección del usuario,

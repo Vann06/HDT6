@@ -2,6 +2,8 @@ package org.example;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class HashMap<K, V> implements MyMap<K, V> {
     private class Entry {
@@ -86,4 +88,11 @@ public class HashMap<K, V> implements MyMap<K, V> {
         }
         return true;
     }
+
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return null;
+    }
+
+
 }
